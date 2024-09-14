@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IDLE TPOT</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        /* CSS Styles */
+
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .column {
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .left-column {
+            width: 20%;
+            background-color: #000000;
+            border-right: 1px solid #1DA1F2;
+        }
+
+        .center-column {
+            width: 40%;
+            background-color: #000000;
+            border-right: 1px solid #1DA1F2;
+        }
+
+        .upgrade-column {
+            width: 20%;
+            background-color: #000000;
+            border-right: 1px solid #1DA1F2;
+        }
+
+        .right-column {
+            width: 20%;
+            background-color: #000000;
+        }
+
+        h1, h2, h3, p, button {
+            color: #ffffff;
+        }
+
+        button {
+            background-color: #1DA1F2;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            border-radius: 20px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        button:hover {
+            background-color: #0d8ddb;
+        }
+
+        .upgrade, .autopoaster {
+            border: 1px solid #1DA1F2;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stats, .currencies, .followers {
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            margin-bottom: 20px;
+        }
+
+        .poast {
+            border-bottom: 1px solid #1DA1F2;
+            padding: 10px 0;
+        }
+
+        .ko-fi {
+            margin-top: 20px;
+        }
+
+        .ko-fi a {
+            color: #1DA1F2;
+            text-decoration: none;
+        }
+
+        .save-buttons {
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        .purchase-stats button {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        /* Notification Styles */
+        #notification {
+            margin-top: 10px;
+            color: #1DA1F2;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Column -->
+    <div class="column left-column">
+        <h2>IDLE TPOT by <a href="https://gibsonow.github.io/landing_page/" target="_blank">[og]</a></h2>
+        <button id="poastButton">Poast</button>
+        <div class="menu">
+            <h3>Stats</h3>
+            <p>AURA: <span id="aura">1</span></p>
+            <button id="buyAuraButton" onclick="purchaseStat('aura')">Buy Aura (Cost: <span id="auraCost">10</span> Likes)</button>
+            <p>ALGO PULL: <span id="algoPull">1</span></p>
+            <button id="buyAlgoPullButton" onclick="purchaseStat('algoPull')">Buy Algo Pull (Cost: <span id="algoPullCost">10</span> RTs)</button>
+            <p>CRACKED: <span id="cracked">1</span></p>
+            <button id="buyCrackedButton" onclick="purchaseStat('cracked')">Buy Cracked (Cost: <span id="crackedCost">10</span> Bookmarks)</button>
+        </div>
+        <div class="currencies">
+            <h3>Currencies</h3>
+            <p>Likes: <span id="likes">0</span></p>
+            <p>RTs: <span id="rts">0</span></p>
+            <p>Bookmarks: <span id="bookmarks">0</span></p>
+        </div>
+        <div class="followers">
+            <h3>Followers</h3>
+            <p><span id="followers">0</span></p>
+        </div>
+        <div class="save-buttons">
+            <button onclick="manualSaveGame()">Save Game</button>
+            <button onclick="loadGame()">Load Game</button>
+            <button onclick="exportGame()">Export Save</button>
+            <button onclick="importGame()">Import Save</button>
+        </div>
+        <!-- Notification Area -->
+        <div id="notification"></div>
+        <div class="ko-fi">
+            <p>Enjoying the game? Toss me a buck on <a href="https://ko-fi.com/owengibson" target="_blank">Ko-Fi</a>!</p>
+        </div>
+    </div>
+
+    <!-- Center Column -->
+    <div class="column center-column">
+        <h2>Poasts</h2>
+        <div id="poasts"></div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="column right-column">
+        <h2>Autopoasters</h2>
+        <div id="autopoasters">
+            <!-- Autopoasters will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Upgrade Column -->
+    <div class="column upgrade-column">
+        <h2>Upgrades</h2>
+        <div id="upgrades">
+            <!-- Upgrades will be dynamically added here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript Code
+
+    // Game Variables
+    let likes = 0;
+    let rts = 0;
+    let bookmarks = 0;
+
+    let aura = 1;
+    let algoPull = 1;
+    let cracked = 1;
+
+    let followers = 0;
+
+    let poastCount = 0;
+
+    // Costs for purchasing stats
+    let auraCost = 10;
+    let algoPullCost = 10;
+    let crackedCost = 10;
+
+    let upgrades = [
+        {
+            name: "Lowbie shoutouts",
+            description: "You've been shouted out by a big account! Congrats, Goated Lowbie!",
+            effectDescription: "Relevance now lasts +1 second longer.",
+            cost: { likes: 10, rts: 2, bookmarks: 0 },
+            effect: function() {
+                relevanceDuration += 1;
+            },
+            purchased: false
+        },
+        {
+            name: "Learning Computer Arch from transistors",
+            description: "You fully understand the might of the silicon stack.",
+            effectDescription: "Algo Pull now has higher potency.",
+            cost: { likes: 15, rts: 5, bookmarks: 1 },
+            effect: function() {
+                algoPullPotency += 1;
+            },
+            purchased: false
+        },
+        {
+            name: "Web Framework hateposting",
+            description: "Who needs websites? Low-Level is where it's at!",
+            effectDescription: "+2% more Likes per Poast.",
+            cost: { likes: 30, rts: 10, bookmarks: 3 },
+            effect: function() {
+                likesMultiplier += 0.02;
+            },
+            purchased: false
+        },
+        // Add more upgrades here
+    ];
+
+    let autopoasters = [
+        {
+            name: "GPT2",
+            description: "The first of many to come.",
+            effectDescription: "Posts automatically every 10 seconds using 10% of your stats.",
+            baseCost: { likes: 100, rts: 30, bookmarks: 10 },
+            cost: { likes: 100, rts: 30, bookmarks: 10 },
+            costScaling: 1.5, // Scaling factor for cost increase
+            baseInterval: 10000, // Base interval of 10 seconds
+            interval: 10000, // Current interval (adjusted based on owned)
+            potency: 0.1, // 10% of your stats
+            owned: 0,
+            timer: null
+        },
+        {
+            name: "GPT3",
+            description: "The first leap.",
+            effectDescription: "Posts automatically every 7 seconds using 12% of your stats.",
+            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
+            cost: { likes: 300, rts: 100, bookmarks: 50 },
+            costScaling: 1.6, // Scaling factor for cost increase
+            baseInterval: 7000, // Base interval of 7 seconds
+            interval: 7000, // Current interval (adjusted based on owned)
+            potency: 0.12, // 12% of your stats
+            owned: 0,
+            timer: null
+        },
+        // Add more autopoasters here
+    ];
+
+    // Game Mechanics Variables
+    let relevanceDuration = 1; // seconds
+    let algoPullPotency = 1;
+    let auraPotency = 1;
+    let crackedPotency = 1;
+    let likesMultiplier = 1;
+    let rtsMultiplier = 1;
+    let bookmarksMultiplier = 1;
+
+    // Update Display
+    function updateDisplay() {
+        document.getElementById('likes').innerText = Math.floor(likes);
+        document.getElementById('rts').innerText = Math.floor(rts);
+        document.getElementById('bookmarks').innerText = Math.floor(bookmarks);
+
+        document.getElementById('aura').innerText = aura;
+        document.getElementById('algoPull').innerText = algoPull;
+        document.getElementById('cracked').innerText = cracked;
+
+        document.getElementById('followers').innerText = Math.floor(followers);
+
+        document.getElementById('auraCost').innerText = auraCost;
+        document.getElementById('algoPullCost').innerText = algoPullCost;
+        document.getElementById('crackedCost').innerText = crackedCost;
+
+        // Update Stat Purchasing Buttons
+        const buyAuraButton = document.getElementById('buyAuraButton');
+        if (likes >= auraCost) {
+            buyAuraButton.disabled = false;
+            buyAuraButton.classList.remove('disabled');
+        } else {
+            buyAuraButton.disabled = true;
+            buyAuraButton.classList.add('disabled');
+        }
+
+        const buyAlgoPullButton = document.getElementById('buyAlgoPullButton');
+        if (rts >= algoPullCost) {
+            buyAlgoPullButton.disabled = false;
+            buyAlgoPullButton.classList.remove('disabled');
+        } else {
+            buyAlgoPullButton.disabled = true;
+            buyAlgoPullButton.classList.add('disabled');
+        }
+
+        const buyCrackedButton = document.getElementById('buyCrackedButton');
+        if (bookmarks >= crackedCost) {
+            buyCrackedButton.disabled = false;
+            buyCrackedButton.classList.remove('disabled');
+        } else {
+            buyCrackedButton.disabled = true;
+            buyCrackedButton.classList.add('disabled');
+        }
+
+        // Update Upgrades
+        upgrades.forEach((upgrade, index) => {
+            const upgradeDiv = document.getElementById('upgrade-' + index);
+            const button = document.getElementById('upgrade-button-' + index);
+            if (!upgrade.purchased && canAfford(upgrade.cost)) {
+                upgradeDiv.classList.remove('disabled');
+                button.disabled = false;
+            } else {
+                upgradeDiv.classList.add('disabled');
+                button.disabled = true;
+            }
+        });
+
+        // Update Autopoasters
+        autopoasters.forEach((autopoaster, index) => {
+            const autopoasterDiv = document.getElementById('autopoaster-' + index);
+            const button = document.getElementById('autopoaster-button-' + index);
+            document.getElementById('autopoaster-owned-' + index).innerText = autopoaster.owned;
+            document.getElementById('autopoaster-cost-' + index).innerText = `${autopoaster.cost.likes} Likes, ${autopoaster.cost.rts} RTs, ${autopoaster.cost.bookmarks} Bookmarks`;
+            if (canAfford(autopoaster.cost)) {
+                autopoasterDiv.classList.remove('disabled');
+                button.disabled = false;
+            } else {
+                autopoasterDiv.classList.add('disabled');
+                button.disabled = true;
+            }
+        });
+    }
+
+    // Can Afford Function
+    function canAfford(cost) {
+        return likes >= cost.likes && rts >= cost.rts && bookmarks >= cost.bookmarks;
+    }
+
+    // Purchase Stat
+    function purchaseStat(stat) {
+        if (stat === 'aura' && likes >= auraCost) {
+            likes -= auraCost;
+            aura += 1;
+            auraCost = Math.floor(auraCost * 1.5);
+        } else if (stat === 'algoPull' && rts >= algoPullCost) {
+            rts -= algoPullCost;
+            algoPull += 1;
+            algoPullCost = Math.floor(algoPullCost * 1.5);
+        } else if (stat === 'cracked' && bookmarks >= crackedCost) {
+            bookmarks -= crackedCost;
+            cracked += 1;
+            crackedCost = Math.floor(crackedCost * 1.5);
+        }
+        updateDisplay();
+    }
+
+    // Purchase Upgrade
+    function purchaseUpgrade(index) {
+        const upgrade = upgrades[index];
+        if (!upgrade.purchased && canAfford(upgrade.cost)) {
+            likes -= upgrade.cost.likes;
+            rts -= upgrade.cost.rts;
+            bookmarks -= upgrade.cost.bookmarks;
+            upgrade.effect();
+            upgrade.purchased = true;
+            const button = document.getElementById('upgrade-button-' + index);
+            button.innerText = 'Purchased';
+            button.disabled = true;
+            updateDisplay();
+        }
+    }
+
+    // Purchase Autopoaster
+    function purchaseAutopoaster(index) {
+        const autopoaster = autopoasters[index];
+        if (canAfford(autopoaster.cost)) {
+            likes -= autopoaster.cost.likes;
+            rts -= autopoaster.cost.rts;
+            bookmarks -= autopoaster.cost.bookmarks;
+            autopoaster.owned += 1;
+
+            // Scale the cost
+            autopoaster.cost.likes = Math.floor(autopoaster.cost.likes * autopoaster.costScaling);
+            autopoaster.cost.rts = Math.floor(autopoaster.cost.rts * autopoaster.costScaling);
+            autopoaster.cost.bookmarks = Math.floor(autopoaster.cost.bookmarks * autopoaster.costScaling);
+
+            updateAutopoasterInterval(autopoaster);
+            updateDisplay();
+        }
+    }
+
+    // Update Autopoaster Interval Based on Owned
+    function updateAutopoasterInterval(autopoaster) {
+        // Clear existing timer
+        if (autopoaster.timer) {
+            clearInterval(autopoaster.timer);
+        }
+
+        // Calculate new interval
+        autopoaster.interval = autopoaster.baseInterval / autopoaster.owned;
+
+        // Ensure the interval is not less than a minimum value to prevent excessive calls
+        const minInterval = 100; // Minimum interval of 100 milliseconds
+        if (autopoaster.interval < minInterval) {
+            autopoaster.interval = minInterval;
+        }
+
+        // Start new timer with updated interval
+        autopoaster.timer = setInterval(() => {
+            poast(false, autopoaster.potency, autopoaster.name);
+        }, autopoaster.interval);
+    }
+
+    // Poast Function
+    function poast(isManual = true, potency = 1, poasterName = 'You') {
+        poastCount += 1;
+        let poastRelevance = relevanceDuration;
+        let poastFollowers = followers;
+
+        // Simulate Viral Chance
+        let viralChance = Math.random() * (followers + aura + algoPull + cracked);
+        if (viralChance > 1000) {
+            // Viral Poast
+            poastFollowers *= 2;
+        }
+
+        // Calculate Rewards
+        let gainedLikes = (Math.random() * (poastFollowers / 10 + algoPull + cracked)) * potency * likesMultiplier;
+        let gainedRTs = (Math.random() * (poastFollowers / 20 + aura + cracked)) * potency * rtsMultiplier;
+        let gainedBookmarks = (Math.random() * (poastFollowers / 80 + aura + algoPull)) * potency * bookmarksMultiplier;
+
+        likes += gainedLikes;
+        rts += gainedRTs;
+        bookmarks += gainedBookmarks;
+
+        // Gain Followers
+        let gainedFollowers = (aura + algoPull + cracked) * (poastRelevance / relevanceDuration) * potency;
+        followers += gainedFollowers;
+
+        // Display Poast
+        displayPoast(poastCount, gainedLikes, gainedRTs, gainedBookmarks, poasterName);
+
+        updateDisplay();
+    }
+
+    // Display Poast Function
+    function displayPoast(id, likesGained, rtsGained, bookmarksGained, poasterName) {
+        const poastsDiv = document.getElementById('poasts');
+        const poastDiv = document.createElement('div');
+        poastDiv.className = 'poast';
+        poastDiv.innerHTML = `
+            <p>We should cars that crash on purpose</p>
+            <p><em>${poasterName} made Poast #${id}</em></p>
+            <p>Likes: ${Math.floor(likesGained)}, RTs: ${Math.floor(rtsGained)}, Bookmarks: ${Math.floor(bookmarksGained)}</p>
+        `;
+        poastsDiv.prepend(poastDiv);
+    }
+
+    // Initialize Upgrades
+    function initUpgrades() {
+        const upgradesDiv = document.getElementById('upgrades');
+        upgrades.forEach((upgrade, index) => {
+            const upgradeDiv = document.createElement('div');
+            upgradeDiv.className = 'upgrade';
+            upgradeDiv.id = 'upgrade-' + index;
+            upgradeDiv.innerHTML = `
+                <h3>${upgrade.name}</h3>
+                <p>${upgrade.description}</p>
+                <p><em>${upgrade.effectDescription}</em></p>
+                <p>Cost: ${upgrade.cost.likes} Likes, ${upgrade.cost.rts} RTs, ${upgrade.cost.bookmarks} Bookmarks</p>
+                <button id="upgrade-button-${index}" onclick="purchaseUpgrade(${index})">Purchase</button>
+            `;
+            upgradesDiv.appendChild(upgradeDiv);
+        });
+    }
+
+    // Initialize Autopoasters
+    function initAutopoasters() {
+        const autopoastersDiv = document.getElementById('autopoasters');
+        autopoasters.forEach((autopoaster, index) => {
+            const autopoasterDiv = document.createElement('div');
+            autopoasterDiv.className = 'autopoaster';
+            autopoasterDiv.id = 'autopoaster-' + index;
+            autopoasterDiv.innerHTML = `
+                <h3>${autopoaster.name}</h3>
+                <p>${autopoaster.description}</p>
+                <p><em>${autopoaster.effectDescription}</em></p>
+                <p>Owned: <span id="autopoaster-owned-${index}">0</span></p>
+                <p>Cost: <span id="autopoaster-cost-${index}">${autopoaster.cost.likes} Likes, ${autopoaster.cost.rts} RTs, ${autopoaster.cost.bookmarks} Bookmarks</span></p>
+                <button id="autopoaster-button-${index}" onclick="purchaseAutopoaster(${index})">Purchase</button>
+            `;
+            autopoastersDiv.appendChild(autopoasterDiv);
+        });
+    }
+
+    // Save Game
+    function saveGame(showNotification = false) {
+        const gameData = {
+            likes,
+            rts,
+            bookmarks,
+            aura,
+            algoPull,
+            cracked,
+            auraCost,
+            algoPullCost,
+            crackedCost,
+            followers,
+            upgrades: upgrades.map(upg => upg.purchased),
+            autopoasters: autopoasters.map(ap => ({
+                owned: ap.owned,
+                interval: ap.interval,
+                cost: ap.cost
+            })),
+        };
+        localStorage.setItem('idleTpotSave', JSON.stringify(gameData));
+
+        if (showNotification) {
+            showMessage('Game saved!');
+        } else {
+            showMessage('Game auto-saved!');
+        }
+    }
+
+    // Manual Save Game (with notification)
+    function manualSaveGame() {
+        saveGame(true);
+    }
+
+    // Show Notification Message
+    function showMessage(message) {
+        const notificationDiv = document.getElementById('notification');
+        notificationDiv.innerText = message;
+        notificationDiv.style.opacity = 1;
+        setTimeout(() => {
+            notificationDiv.style.opacity = 0;
+        }, 3000); // Fade out after 3 seconds
+    }
+
+    // Load Game
+    function loadGame() {
+        const savedData = JSON.parse(localStorage.getItem('idleTpotSave'));
+        if (savedData) {
+            likes = savedData.likes;
+            rts = savedData.rts;
+            bookmarks = savedData.bookmarks;
+            aura = savedData.aura;
+            algoPull = savedData.algoPull;
+            cracked = savedData.cracked;
+            auraCost = savedData.auraCost;
+            algoPullCost = savedData.algoPullCost;
+            crackedCost = savedData.crackedCost;
+            followers = savedData.followers;
+            savedData.upgrades.forEach((purchased, index) => {
+                upgrades[index].purchased = purchased;
+                if (purchased) {
+                    upgrades[index].effect();
+                    const button = document.getElementById('upgrade-button-' + index);
+                    button.innerText = 'Purchased';
+                    button.disabled = true;
+                }
+            });
+            savedData.autopoasters.forEach((data, index) => {
+                autopoasters[index].owned = data.owned;
+                autopoasters[index].interval = data.interval || autopoasters[index].baseInterval / autopoasters[index].owned;
+                autopoasters[index].cost = data.cost || autopoasters[index].cost;
+                if (autopoasters[index].owned > 0) {
+                    updateAutopoasterInterval(autopoasters[index]);
+                }
+            });
+            updateDisplay();
+            showMessage('Game loaded!');
+        } else {
+            showMessage('No save data found.');
+        }
+    }
+
+    // Export Game Save
+    function exportGame() {
+        const saveData = localStorage.getItem('idleTpotSave');
+        if (saveData) {
+            prompt('Copy your save data:', saveData);
+        } else {
+            alert('No save data to export.');
+        }
+    }
+
+    // Import Game Save
+    function importGame() {
+        const saveData = prompt('Paste your save data:');
+        if (saveData) {
+            localStorage.setItem('idleTpotSave', saveData);
+            loadGame();
+        }
+    }
+
+    // Poast Button Event
+    document.getElementById('poastButton').addEventListener('click', () => {
+        poast();
+    });
+
+    // Initialize Game
+    function initGame() {
+        initUpgrades();
+        initAutopoasters();
+        updateDisplay();
+    }
+
+    initGame();
+
+    // Auto-save every 60 seconds
+    setInterval(() => {
+        saveGame();
+    }, 60000);
+
+</script>
+
+</body>
+</html>

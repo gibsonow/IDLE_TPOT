@@ -1,4 +1,4 @@
-I want to create an in-browser clicker idle game named IDLE TPOT. "TPOT" is an anagram that reads as "This Part of Twitter", and refers to my own niche twitter community. This game will serve as an homage to that community, and many of my mutuals. I am inexperienced in simple web game design, and would like you to write a beta version of this game, which I will then take and improve upon.
+I want to create an in-browser clicker idle game named IDLE TPOT. "TPOT" is an anagram that reads as "This Part of Twitter", and refers to my own niche twitter community. This game will serve as an homage to that community, and many of my mutuals. I am inexperienced in simple web game design, and would like you to write a beta version of this game, which I will then take and improve upon. Assume the computer I will use to iterate on this game is running Windows 10, using Github for version control, VSCode as my IDE, and Chrome as my browser.
 
 INSPIRATION: Things that inspire the look and feel of this game.
 - Universal Paperclips: A visually simple html / javascript game, one of the first idle clicker games. I want to pull the design simplicity from this game - it just runs.
@@ -56,7 +56,7 @@ UPGRADES: Unlock different types of content for you to Poast about. Purchased wi
 - Get accepted into Y-Combinator
 - Guest on the Lex Friedman Podcast
 
-AUTOPOASTERS: LLM bots that hit the Poast button for you at a fraction of your current stats for AFK earnings. Multiple of each model listed below can be bought and used concurrently.
+AUTOPOASTERS: LLM bots that hit the Poast button for you at a fraction of your current stats for AFK earnings. Multiple of each model listed below can be bought and used concurrently. Once again, only a few of these are populated, but I will fill them out later in the code.
 - GPT2
 	- Desc: The first of many to come.
 	- Cost: 100 LIKES, 30 RTS, 10 BOOKMARKS

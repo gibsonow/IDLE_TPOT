@@ -310,8 +310,8 @@
 
     let upgrades = [
         {
-            name: "Lowbie shoutouts",
-            description: "You've been shouted out by a big account! Congrats, Goated Lowbie!",
+            name: "Goated Lowbie Shoutout",
+            description: "A bigger account has gazed mercifully upon you. Use this opportunity wisely...",
             effectDescription: "Relevance now lasts +1 second longer, netting you more followers per Poast.",
             cost: { likes: 10, rts: 2, bookmarks: 0 },
             effect: function() {
@@ -320,19 +320,19 @@
             purchased: false
         },
         {
-            name: "Learning Computer Arch from transistors",
+            name: "Learning Computer Arch from Transistors",
             description: "You fully understand the might of the silicon stack.",
-            effectDescription: "Algo Pull now has higher potency.",
+            effectDescription: "CRACKED now has higher potency.",
             cost: { likes: 15, rts: 5, bookmarks: 1 },
             effect: function() {
-                algoPullPotency += 1;
+                crackedPotency += 1;
             },
             purchased: false
         },
         {
-            name: "Web Framework hateposting",
-            description: "Who needs websites? Low-Level is where it's at!",
-            effectDescription: "+2% more Likes per Poast.",
+            name: "Web Framework Hateposting",
+            description: "Building webapps is for NERDS.",
+            effectDescription: "+2% more LIKES per Poast.",
             cost: { likes: 30, rts: 10, bookmarks: 3 },
             effect: function() {
                 likesMultiplier += 0.02;
@@ -342,7 +342,7 @@
         {
             name: "Getting added to the 'Getting Hunted Down and Eaten' list",
             description: "That's probably a good sign.",
-            effectDescription: "Aura now has higher potency.",
+            effectDescription: "AURA now has higher potency.",
             cost: { likes: 40, rts: 20, bookmarks: 10 },
             effect: function() {
                 auraPotency += 1;
@@ -352,10 +352,10 @@
         {
             name: "Dating Spaces",
             description: "Hopefully your date never finds out about this.",
-            effectDescription: "",
+            effectDescription: "+2% more RTS per Poast",
             cost: { likes: 1, rts: 1, bookmarks: 1 },
             effect: function() {
-                
+                rtsMultiplier += 0.02;
             },
             purchased: false
         },
@@ -371,7 +371,7 @@
         },
         {
             name: "AI/ML Progress Updates",
-            description: "You are on that daily grind.",
+            description: "DAY 57: Woke up, Drank Espresso, Built a new GPU Cluster, Got out of bed",
             effectDescription: "",
             cost: { likes: 1, rts: 1, bookmarks: 1 },
             effect: function() {
@@ -381,7 +381,7 @@
         },
         {
             name: "Bearblog Posts",
-            description: "Everyone must know your hot take on [insert framework here].",
+            description: "Everyone must know your hot take on React.",
             effectDescription: "",
             cost: { likes: 1, rts: 1, bookmarks: 1 },
             effect: function() {
@@ -391,7 +391,7 @@
         },
         {
             name: "CS Textbook Studying",
-            description: "You're the talk of the Starbucks.",
+            description: "You are the most interesting person in the Starbucks.",
             effectDescription: "",
             cost: { likes: 1, rts: 1, bookmarks: 1 },
             effect: function() {
@@ -401,7 +401,7 @@
         },
         {
             name: "Anime PFP",
-            description: "It's actually a high-TC signal, dad.",
+            description: "It's actually a high-TC signal, Dad.",
             effectDescription: "",
             cost: { likes: 1, rts: 1, bookmarks: 1 },
             effect: function() {
@@ -461,7 +461,7 @@
         },
         {
             name: "Non-Anime PFP",
-            description: "It was never cool, acktually.",
+            description: "It's actually an anti-signal, Dad.",
             effectDescription: "",
             cost: { likes: 1, rts: 1, bookmarks: 1 },
             effect: function() {
@@ -884,9 +884,9 @@
         }
 
         // Calculate Rewards (likes, RTs, bookmarks)
-        let gainedLikes = (Math.random() * (poastFollowers / 10 + algoPull + cracked)) * potency * likesMultiplier;
-        let gainedRTs = (Math.random() * (poastFollowers / 20 + aura + cracked)) * potency * rtsMultiplier;
-        let gainedBookmarks = (Math.random() * (poastFollowers / 80 + aura + algoPull)) * potency * bookmarksMultiplier;
+        let gainedLikes = (Math.random() * ((poastFollowers + algoPull + cracked) / 10 )) * potency * likesMultiplier;
+        let gainedRTs = (Math.random() * ((poastFollowers + aura + cracked) / 20 )) * potency * rtsMultiplier;
+        let gainedBookmarks = (Math.random() * ((poastFollowers + aura + algoPull) / 80 )) * potency * bookmarksMultiplier;
 
         likes += gainedLikes;
         rts += gainedRTs;

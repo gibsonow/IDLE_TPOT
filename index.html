@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IDLE TPOT v0.1</title>
+    <title>IDLE TPOT v1.0</title>
     <link rel="icon" type="image/png" href="logo.png">
     <style>
         /* CSS Styles */
@@ -224,13 +224,13 @@
 
             <div class="tooltip">
                 <p>🌀 ALGO PULL: <span id="algoPull">1</span></p>
-                <span class="tooltiptext">ALGO PULL enhances your visibility in algorithms. Increases LIKES and BOOKMARKS per Poast.</span>
+                <span class="tooltiptext">ALGO PULL enhances your visibility to the algorithm. Increases LIKES and BOOKMARKS per Poast.</span>
             </div>
             <button id="buyAlgoPullButton" onclick="purchaseStat('algoPull')">Buy Algo Pull (Cost: <span id="algoPullCost">10</span> RTs)</button>
 
             <div class="tooltip">
                 <p>⚡ CRACKED: <span id="cracked">1</span></p>
-                <span class="tooltiptext">CRACKED amplifies your efficiency and gains. Increases LIKES and RTS per Poast.</span>
+                <span class="tooltiptext">CRACKED amplifies your proficiency and skill. Increases LIKES and RTS per Poast.</span>
             </div>
             <button id="buyCrackedButton" onclick="purchaseStat('cracked')">Buy Cracked (Cost: <span id="crackedCost">10</span> Bookmarks)</button>
         </div>
@@ -1028,9 +1028,9 @@
         // Increase the cost of Prestige for next time (scaling)
         const prestigeUpgrade = upgrades.find(upg => upg.name === "Prestige");
         if (prestigeUpgrade) {
-            prestigeUpgrade.cost.likes = Math.floor(prestigeUpgrade.cost.likes * 1.5);
-            prestigeUpgrade.cost.rts = Math.floor(prestigeUpgrade.cost.rts * 1.5);
-            prestigeUpgrade.cost.bookmarks = Math.floor(prestigeUpgrade.cost.bookmarks * 1.5);
+            prestigeUpgrade.cost.likes = Math.floor(prestigeUpgrade.cost.likes * 1.1);
+            prestigeUpgrade.cost.rts = Math.floor(prestigeUpgrade.cost.rts * 1.1);
+            prestigeUpgrade.cost.bookmarks = Math.floor(prestigeUpgrade.cost.bookmarks * 1.1);
         }
 
         updateDisplay();
@@ -1221,7 +1221,7 @@
         initUpgrades();
         initAutopoasters();
         updateDisplay();
-        //loadGame();
+        loadGame();
     }
 
     initGame();

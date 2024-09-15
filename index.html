@@ -98,6 +98,7 @@
             padding: 10px 0;
         }
 
+        /* Added styles for the poast currencies */
         .poast-currencies {
             display: flex;
             justify-content: center;
@@ -138,6 +139,50 @@
             transition: opacity 0.5s;
         }
 
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Tooltip text */
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1DA1F2;
+            color: #ffffff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position above the tooltip element */
+            left: 50%;
+            margin-left: -100px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+        }
+
+        /* Tooltip arrow */
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%; /* At the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1DA1F2 transparent transparent transparent;
+        }
+
+        /* Show the tooltip text when hovering */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
     </style>
 </head>
 <body>
@@ -149,22 +194,36 @@
         <button id="poastButton">Poast</button>
         <div class="menu">
             <h3>Stats</h3>
-            <p>AURA: <span id="aura">1</span></p>
+            <div class="tooltip">
+                <p>AURA: <span id="aura">1</span></p>
+                <span class="tooltiptext">AURA increases your presence and impact on Poasts.</span>
+            </div>
             <button id="buyAuraButton" onclick="purchaseStat('aura')">Buy Aura (Cost: <span id="auraCost">10</span> Likes)</button>
-            <p>ALGO PULL: <span id="algoPull">1</span></p>
+
+            <div class="tooltip">
+                <p>ALGO PULL: <span id="algoPull">1</span></p>
+                <span class="tooltiptext">ALGO PULL enhances your visibility in algorithms.</span>
+            </div>
             <button id="buyAlgoPullButton" onclick="purchaseStat('algoPull')">Buy Algo Pull (Cost: <span id="algoPullCost">10</span> RTs)</button>
-            <p>CRACKED: <span id="cracked">1</span></p>
+
+            <div class="tooltip">
+                <p>CRACKED: <span id="cracked">1</span></p>
+                <span class="tooltiptext">CRACKED amplifies your efficiency and gains.</span>
+            </div>
             <button id="buyCrackedButton" onclick="purchaseStat('cracked')">Buy Cracked (Cost: <span id="crackedCost">10</span> Bookmarks)</button>
         </div>
         <div class="currencies">
             <h3>Currencies</h3>
-            <p>Likes: <span id="likes">0</span></p>
-            <p>RTs: <span id="rts">0</span></p>
-            <p>Bookmarks: <span id="bookmarks">0</span></p>
+            <p>❤️ Likes: <span id="likes">0</span></p>
+            <p>🔁 RTs: <span id="rts">0</span></p>
+            <p>🔖 Bookmarks: <span id="bookmarks">0</span></p>
         </div>
         <div class="followers">
             <h3>Followers</h3>
-            <p><span id="followers">0</span></p>
+            <div class="tooltip">
+                <p><span id="followers">0</span></p>
+                <span class="tooltiptext">FOLLOWERS dictates the initial reach of your Poasts.</span>
+            </div>
         </div>
         <div class="save-buttons">
             <button onclick="manualSaveGame()">Save Game</button>
@@ -223,11 +282,15 @@
     let algoPullCost = 10;
     let crackedCost = 10;
 
+    // Prestige Variables
+    let prestigeCount = 0; // Tracks how many Prestiges have been purchased
+    let prestigeBonus = 0; // Start with 0% bonus
+
     let upgrades = [
         {
             name: "Lowbie shoutouts",
             description: "You've been shouted out by a big account! Congrats, Goated Lowbie!",
-            effectDescription: "Relevance now lasts +1 second longer.",
+            effectDescription: "Relevance now lasts +1 second longer, netting you more followers per Poast.",
             cost: { likes: 10, rts: 2, bookmarks: 0 },
             effect: function() {
                 relevanceDuration += 1;
@@ -434,13 +497,24 @@
             },
             purchased: false
         },
+        {
+            name: "Prestige",
+            description: "You got too big, flew too close to the sun. There's only one thing left to do: make a new alt.",
+            effectDescription: "Lose ALL progress, but Gain +1% more followers per Poast permanently.",
+            cost: { likes: 5, rts: 5, bookmarks: 5 },
+            effect: function() {
+                prestige();
+            },
+            purchased: false,
+            repeatable: true // Indicates that this upgrade can be purchased multiple times
+        }
         // Add more upgrades here
     ];
 
     let autopoasters = [
         {
             name: "GPT2",
-            description: "The Progenitor.",
+            description: "The Breakthrough.",
             effectDescription: "Posts automatically every 10 seconds using 10% of your stats.",
             baseCost: { likes: 100, rts: 30, bookmarks: 10 },
             cost: { likes: 100, rts: 30, bookmarks: 10 },
@@ -641,12 +715,28 @@
         upgrades.forEach((upgrade, index) => {
             const upgradeDiv = document.getElementById('upgrade-' + index);
             const button = document.getElementById('upgrade-button-' + index);
-            if (!upgrade.purchased && canAfford(upgrade.cost)) {
-                upgradeDiv.classList.remove('disabled');
-                button.disabled = false;
+            const costElement = document.getElementById('upgrade-cost-' + index);
+
+            if (upgrade.repeatable) {
+                // For Prestige upgrade
+                button.innerText = `Prestige (${prestigeCount})`;
+                costElement.innerText = `Cost: ${upgrade.cost.likes} Likes, ${upgrade.cost.rts} RTs, ${upgrade.cost.bookmarks} Bookmarks`;
+
+                if (canAfford(upgrade.cost)) {
+                    upgradeDiv.classList.remove('disabled');
+                    button.disabled = false;
+                } else {
+                    upgradeDiv.classList.add('disabled');
+                    button.disabled = true;
+                }
             } else {
-                upgradeDiv.classList.add('disabled');
-                button.disabled = true;
+                if (!upgrade.purchased && canAfford(upgrade.cost)) {
+                    upgradeDiv.classList.remove('disabled');
+                    button.disabled = false;
+                } else {
+                    upgradeDiv.classList.add('disabled');
+                    button.disabled = true;
+                }
             }
         });
 
@@ -692,18 +782,21 @@
     // Purchase Upgrade
     function purchaseUpgrade(index) {
         const upgrade = upgrades[index];
-        if (!upgrade.purchased && canAfford(upgrade.cost)) {
+        if ((upgrade.repeatable || !upgrade.purchased) && canAfford(upgrade.cost)) {
             likes -= upgrade.cost.likes;
             rts -= upgrade.cost.rts;
             bookmarks -= upgrade.cost.bookmarks;
             upgrade.effect();
-            upgrade.purchased = true;
-            const button = document.getElementById('upgrade-button-' + index);
-            button.innerText = 'Purchased';
-            button.disabled = true;
+            if (!upgrade.repeatable) {
+                upgrade.purchased = true;
+                const button = document.getElementById('upgrade-button-' + index);
+                button.innerText = 'Purchased';
+                button.disabled = true;
+            }
             updateDisplay();
         }
     }
+
 
     // Purchase Autopoaster
     function purchaseAutopoaster(index) {
@@ -779,6 +872,7 @@
 
         // Gain Followers (affected by decaying relevance)
         let gainedFollowers = (aura + algoPull + cracked) * (poastRelevance / relevanceDuration) * potency;
+        gainedFollowers *= (1 + prestigeBonus); // Apply prestige bonus to follower gains
         followers += gainedFollowers;
 
         // Decay the relevance every second for this poast
@@ -809,7 +903,9 @@
         "theres a lot of {adjective} {noun}s on the tl today",
         "i went to the {adjective} factory and everyone knew you",
         "i went to the {adjective} factory and nobody knew you",
-        
+        "we are so {adjective}",
+        "it has never been so {adjective}",
+        "who here {verb} at 3 in the morning",
     ];
 
     const adjectives = ["goated", "based", "gonked", "hype", "delusional", "alright", "cracked", "trained", "over", "back", "kino", "ngmi"];
@@ -818,19 +914,27 @@
 
     function generateRandomPoast() {
         const sentence = sentences[Math.floor(Math.random() * sentences.length)];
-        const replacements = {
-            "{adjective}": adjectives[Math.floor(Math.random() * adjectives.length)],
-            "{noun}": nouns[Math.floor(Math.random() * nouns.length)],
-            "{verb}": verbs[Math.floor(Math.random() * verbs.length)],
-        };
 
-        let poast = sentence;
-        for (const [key, value] of Object.entries(replacements)) {
-            poast = poast.replace(new RegExp(key, 'g'), value);
+        // Function to get a random word from the given array based on type
+        function getRandomWord(type) {
+            if (type === "adjective") {
+                return adjectives[Math.floor(Math.random() * adjectives.length)];
+            } else if (type === "noun") {
+                return nouns[Math.floor(Math.random() * nouns.length)];
+            } else if (type === "verb") {
+                return verbs[Math.floor(Math.random() * verbs.length)];
+            }
+            return "";
         }
+
+        // Replace placeholders with random words
+        const poast = sentence.replace(/\{(adjective|noun|verb)\}/g, (match, p1) => {
+            return getRandomWord(p1);
+        });
 
         return poast;
     }
+
 
 
     function displayPoast(id, likesGained, rtsGained, bookmarksGained, poasterName) {
@@ -853,6 +957,64 @@
         poastsDiv.prepend(poastDiv);
     }
 
+    function prestige() {
+        prestigeCount += 1; // Increment the prestige count
+
+        // Update the prestige bonus
+        prestigeBonus = 0.01 * prestigeCount;
+
+        // Reset currencies, stats, autopoasters, upgrades, followers, and poasts
+        likes = 0;
+        rts = 0;
+        bookmarks = 0;
+
+        aura = 1;
+        algoPull = 1;
+        cracked = 1;
+
+        auraCost = 10;
+        algoPullCost = 10;
+        crackedCost = 10;
+
+        followers = 0;
+        poastCount = 0;
+
+        // Reset autopoasters
+        autopoasters.forEach(ap => {
+            ap.owned = 0;
+            clearInterval(ap.timer); // Stop autopoasting
+            ap.timer = null;
+            ap.cost = { ...ap.baseCost }; // Reset autopoaster cost to base
+        });
+
+        // Reset upgrades
+        upgrades.forEach((upgrade, index) => {
+            if (upgrade.name !== "Prestige") {
+                upgrade.purchased = false;
+                const button = document.getElementById('upgrade-button-' + index);
+                if (button) {
+                    button.innerText = 'Purchase';
+                    button.disabled = false;
+                }
+            }
+        });
+
+        // Clear Poasts column
+        const poastsDiv = document.getElementById('poasts');
+        poastsDiv.innerHTML = '';
+
+        // Increase the cost of Prestige for next time (scaling)
+        const prestigeUpgrade = upgrades.find(upg => upg.name === "Prestige");
+        if (prestigeUpgrade) {
+            prestigeUpgrade.cost.likes = Math.floor(prestigeUpgrade.cost.likes * 1.5);
+            prestigeUpgrade.cost.rts = Math.floor(prestigeUpgrade.cost.rts * 1.5);
+            prestigeUpgrade.cost.bookmarks = Math.floor(prestigeUpgrade.cost.bookmarks * 1.5);
+        }
+
+        updateDisplay();
+    }
+
+
 
     // Initialize Upgrades
     function initUpgrades() {
@@ -865,12 +1027,13 @@
                 <h3>${upgrade.name}</h3>
                 <p>${upgrade.description}</p>
                 <p><em>${upgrade.effectDescription}</em></p>
-                <p>Cost: ${upgrade.cost.likes} Likes, ${upgrade.cost.rts} RTs, ${upgrade.cost.bookmarks} Bookmarks</p>
+                <p id="upgrade-cost-${index}">Cost: ${upgrade.cost.likes} Likes, ${upgrade.cost.rts} RTs, ${upgrade.cost.bookmarks} Bookmarks</p>
                 <button id="upgrade-button-${index}" onclick="purchaseUpgrade(${index})">Purchase</button>
             `;
             upgradesDiv.appendChild(upgradeDiv);
         });
     }
+
 
     // Initialize Autopoasters
     function initAutopoasters() {
@@ -904,7 +1067,12 @@
             algoPullCost,
             crackedCost,
             followers,
-            upgrades: upgrades.map(upg => upg.purchased),
+            prestigeCount,
+            prestigeBonus,
+            upgrades: upgrades.map(upg => ({
+                purchased: upg.purchased,
+                cost: upg.cost
+            })),
             autopoasters: autopoasters.map(ap => ({
                 owned: ap.owned,
                 interval: ap.interval,
@@ -919,6 +1087,7 @@
             showMessage('Game auto-saved!');
         }
     }
+
 
     // Manual Save Game (with notification)
     function manualSaveGame() {
@@ -949,6 +1118,9 @@
             algoPullCost = savedData.algoPullCost;
             crackedCost = savedData.crackedCost;
             followers = savedData.followers;
+            prestigeCount = savedData.prestigeCount || 0;
+            prestigeBonus = savedData.prestigeBonus || 0;
+
             savedData.upgrades.forEach((purchased, index) => {
                 upgrades[index].purchased = purchased;
                 if (purchased) {

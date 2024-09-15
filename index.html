@@ -63,6 +63,13 @@
             font-family: 'Helvetica Neue', Arial, sans-serif;
         }
 
+        #poastButton {
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            border-radius: 30px;
+        }
+
         button:hover {
             background-color: #0d8ddb;
         }
@@ -89,6 +96,14 @@
         .poast {
             border-bottom: 1px solid #1DA1F2;
             padding: 10px 0;
+        }
+
+        .poast-currencies {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 18px;
+            margin-top: 10px;
         }
 
         .ko-fi {
@@ -434,10 +449,11 @@
         }, autopoaster.interval);
     }
 
-    // Poast Function
     function poast(isManual = true, potency = 1, poasterName = 'You') {
         poastCount += 1;
-        let poastRelevance = relevanceDuration;
+        
+        // Initial relevance set for the poast
+        let poastRelevance = relevanceDuration; 
         let poastFollowers = followers;
 
         // Simulate Viral Chance
@@ -447,7 +463,15 @@
             poastFollowers *= 2;
         }
 
-        // Calculate Rewards
+        // Function to decay relevance over time
+        function decayRelevance() {
+            poastRelevance -= 0.1; // Adjust decay rate as necessary
+            if (poastRelevance < 0) {
+                poastRelevance = 0; // Relevance should not go below 0
+            }
+        }
+
+        // Calculate Rewards (likes, RTs, bookmarks)
         let gainedLikes = (Math.random() * (poastFollowers / 10 + algoPull + cracked)) * potency * likesMultiplier;
         let gainedRTs = (Math.random() * (poastFollowers / 20 + aura + cracked)) * potency * rtsMultiplier;
         let gainedBookmarks = (Math.random() * (poastFollowers / 80 + aura + algoPull)) * potency * bookmarksMultiplier;
@@ -456,9 +480,17 @@
         rts += gainedRTs;
         bookmarks += gainedBookmarks;
 
-        // Gain Followers
+        // Gain Followers (affected by decaying relevance)
         let gainedFollowers = (aura + algoPull + cracked) * (poastRelevance / relevanceDuration) * potency;
         followers += gainedFollowers;
+
+        // Decay the relevance every second for this poast
+        let relevanceDecayInterval = setInterval(() => {
+            decayRelevance();
+            if (poastRelevance === 0) {
+                clearInterval(relevanceDecayInterval); // Stop decaying when relevance hits 0
+            }
+        }, 1000); // 1000 ms = 1 second, adjust for faster or slower decay
 
         // Display Poast
         displayPoast(poastCount, gainedLikes, gainedRTs, gainedBookmarks, poasterName);
@@ -466,18 +498,56 @@
         updateDisplay();
     }
 
-    // Display Poast Function
+    const sentences = [
+        "I can't believe it's not {noun}!",
+        "the {noun}s are {adjective}",
+        "she {verb} on my {noun} till i {adjective}",
+        "it's not {adjective} till its {adjective}",
+        "who said {noun}s werent {adjective}",
+        "ive never met a {adjective} {noun} that {verb}"
+    ];
+
+    const adjectives = ["goated", "based", "gonked", "hype", "delusional", "alright", "cracked", "trained", "over", "back"];
+    const nouns = ["girl", "lowbie", "VC", "hairdresser", "aura", "stack", "LLM", "engie", "model", "soft skill"];
+    const verbs = [ "fights", "ships", "flies", "eats", "sleeps", "follows"];
+
+    function generateRandomPoast() {
+        const sentence = sentences[Math.floor(Math.random() * sentences.length)];
+        const replacements = {
+            "{adjective}": adjectives[Math.floor(Math.random() * adjectives.length)],
+            "{noun}": nouns[Math.floor(Math.random() * nouns.length)],
+            "{verb}": verbs[Math.floor(Math.random() * verbs.length)],
+        };
+
+        let poast = sentence;
+        for (const [key, value] of Object.entries(replacements)) {
+            poast = poast.replace(new RegExp(key, 'g'), value);
+        }
+
+        return poast;
+    }
+
+
     function displayPoast(id, likesGained, rtsGained, bookmarksGained, poasterName) {
         const poastsDiv = document.getElementById('poasts');
         const poastDiv = document.createElement('div');
         poastDiv.className = 'poast';
+
+        // Generate dynamic content
+        const poastContent = generateRandomPoast();
+
         poastDiv.innerHTML = `
-            <p>We should cars that crash on purpose</p>
+            <p>${poastContent}</p>
             <p><em>${poasterName} made Poast #${id}</em></p>
-            <p>Likes: ${Math.floor(likesGained)}, RTs: ${Math.floor(rtsGained)}, Bookmarks: ${Math.floor(bookmarksGained)}</p>
+            <div class="poast-currencies">
+                <span>❤️ ${Math.floor(likesGained)}</span>
+                <span>🔁 ${Math.floor(rtsGained)}</span>
+                <span>🔖 ${Math.floor(bookmarksGained)}</span>
+            </div>
         `;
         poastsDiv.prepend(poastDiv);
     }
+
 
     // Initialize Upgrades
     function initUpgrades() {

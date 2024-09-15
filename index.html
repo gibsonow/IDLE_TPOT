@@ -254,6 +254,186 @@
             },
             purchased: false
         },
+        {
+            name: "Getting added to the 'Getting Hunted Down and Eaten' list",
+            description: "That's probably a good sign.",
+            effectDescription: "Aura now has higher potency.",
+            cost: { likes: 40, rts: 20, bookmarks: 10 },
+            effect: function() {
+                auraPotency += 1;
+            },
+            purchased: false
+        },
+        {
+            name: "Dating Spaces",
+            description: "Hopefully your date never finds out about this.",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Esoteric Poasting",
+            description: "What did you see?",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "AI/ML Progress Updates",
+            description: "You are on that daily grind.",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Bearblog Posts",
+            description: "Everyone must know your hot take on [insert framework here].",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "CS Textbook Studying",
+            description: "You're the talk of the Starbucks.",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Anime PFP",
+            description: "It's actually a high-TC signal, dad.",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "New LLM Hype Train",
+            description: "AGI has been achieved, for real this time.",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Building something from Scratch in C",
+            description: "Just so long as it isn't an HTTP server.",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Building a Joke Website",
+            description: "Who would waste time on something like that?",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Landed an SF job",
+            description: "",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Started a Startup",
+            description: "",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Non-Anime PFP",
+            description: "It was never cool, acktually.",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Unexplainable Aura Spike",
+            description: "",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Learning Zig",
+            description: "",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Accepted into Y-Combinator",
+            description: "",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Lex Friedman Podcast Guest",
+            description: "",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
+        {
+            name: "Sold to Microsoft",
+            description: "",
+            effectDescription: "",
+            cost: { likes: , rts: , bookmarks:  },
+            effect: function() {
+                
+            },
+            purchased: false
+        },
         // Add more upgrades here
     ];
 
@@ -273,7 +453,7 @@
         },
         {
             name: "GPT3",
-            description: "The first leap.",
+            description: "The great leap forward.",
             effectDescription: "Posts automatically every 7 seconds using 12% of your stats.",
             baseCost: { likes: 300, rts: 100, bookmarks: 50 },
             cost: { likes: 300, rts: 100, bookmarks: 50 },
@@ -281,6 +461,32 @@
             baseInterval: 7000, // Base interval of 7 seconds
             interval: 7000, // Current interval (adjusted based on owned)
             potency: 0.12, // 12% of your stats
+            owned: 0,
+            timer: null
+        },
+        {
+            name: "CHATGPT",
+            description: "The Starting Gun.",
+            effectDescription: "Posts automatically every 5 seconds using 20% of your stats.",
+            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
+            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            costScaling: 1.6, // Scaling factor for cost increase
+            baseInterval: 5000, // Base interval of 5 seconds
+            interval: 5000, // Current interval (adjusted based on owned)
+            potency: 0.2, // 20% of your stats
+            owned: 0,
+            timer: null
+        },
+        {
+            name: "",
+            description: "",
+            effectDescription: "Posts automatically every  seconds using % of your stats.",
+            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
+            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            costScaling: 1.6,
+            baseInterval: 5000,
+            interval: 5000,
+            potency: 0.2,
             owned: 0,
             timer: null
         },
@@ -499,17 +705,22 @@
     }
 
     const sentences = [
-        "I can't believe it's not {noun}!",
         "the {noun}s are {adjective}",
         "she {verb} on my {noun} till i {adjective}",
         "it's not {adjective} till its {adjective}",
         "who said {noun}s werent {adjective}",
-        "ive never met a {adjective} {noun} that {verb}"
+        "ive never met a {adjective} {noun} that {verb}",
+        "i built a {noun} from scratch in C",
+        "you need to get your {noun} {adjective}",
+        "who needs {noun} when you got {noun}",
+        "this is me when i {verb} my {noun}",
+        "we should {noun} that {verb} on purpose",
+        "theres a lot of {adjective} {noun}s on the tl today",
     ];
 
-    const adjectives = ["goated", "based", "gonked", "hype", "delusional", "alright", "cracked", "trained", "over", "back"];
-    const nouns = ["girl", "lowbie", "VC", "hairdresser", "aura", "stack", "LLM", "engie", "model", "soft skill"];
-    const verbs = [ "fights", "ships", "flies", "eats", "sleeps", "follows"];
+    const adjectives = ["goated", "based", "gonked", "hype", "delusional", "alright", "cracked", "trained", "over", "back", "kino", "ngmi"];
+    const nouns = ["lowbie", "VC", "hairdresser", "aura", "stack", "LLM", "engie", "model", "soft skill", "CS grad", "SF", "React", "Haskell", "Zig", "poaster", "swe", "grass", "nvim", "replyguy", "highbie", "oomfie", "mf", "chat"];
+    const verbs = [ "fights", "ships", "flies", "eats", "sleeps", "follows", "rocks", "programs", "gaslights", "touches", "crashes", "poasts", "tweets", "yaps"];
 
     function generateRandomPoast() {
         const sentence = sentences[Math.floor(Math.random() * sentences.length)];
@@ -697,6 +908,7 @@
         initUpgrades();
         initAutopoasters();
         updateDisplay();
+        //loadGame();
     }
 
     initGame();

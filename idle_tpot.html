@@ -244,7 +244,7 @@
             <h3>Followers</h3>
             <div class="tooltip">
                 <p><span id="followers">0</span></p>
-                <span class="tooltiptext">FOLLOWERS dictates the initial reach of your Poasts.</span>
+                <span class="tooltiptext">FOLLOWERS dictates the initial reach of your Poasts. Increases with RELEVANCE.</span>
             </div>
         </div>
         <div class="save-buttons">
@@ -304,6 +304,16 @@
     let algoPullCost = 10;
     let crackedCost = 10;
 
+    // Base cost for the first upgrade
+    const upgradeBaseCost = {
+        likes: 50,
+        rts: 20,
+        bookmarks: 10
+    };
+
+    // Multiplication factor for subsequent upgrades
+    const upgradeCostMultiplier = 4.5;
+
     // Prestige Variables
     let prestigeCount = 0; // Tracks how many Prestiges have been purchased
     let prestigeBonus = 0; // Start with 0% bonus
@@ -312,8 +322,7 @@
         {
             name: "Goated Lowbie Shoutout",
             description: "A bigger account has gazed mercifully upon you. Use this opportunity wisely...",
-            effectDescription: "Relevance now lasts +1 second longer, netting you more followers per Poast.",
-            cost: { likes: 10, rts: 2, bookmarks: 0 },
+            effectDescription: "RELEVANCE now lasts +1 second longer, netting you more followers per Poast.",
             effect: function() {
                 relevanceDuration += 1;
             },
@@ -323,7 +332,6 @@
             name: "Learning Computer Arch from Transistors",
             description: "You fully understand the might of the silicon stack.",
             effectDescription: "CRACKED now has higher potency.",
-            cost: { likes: 15, rts: 5, bookmarks: 1 },
             effect: function() {
                 crackedPotency += 1;
             },
@@ -333,7 +341,6 @@
             name: "Web Framework Hateposting",
             description: "Building webapps is for NERDS.",
             effectDescription: "+2% more LIKES per Poast.",
-            cost: { likes: 30, rts: 10, bookmarks: 3 },
             effect: function() {
                 likesMultiplier += 0.02;
             },
@@ -343,7 +350,6 @@
             name: "Getting added to the 'Getting Hunted Down and Eaten' list",
             description: "That's probably a good sign.",
             effectDescription: "AURA now has higher potency.",
-            cost: { likes: 40, rts: 20, bookmarks: 10 },
             effect: function() {
                 auraPotency += 1;
             },
@@ -352,8 +358,7 @@
         {
             name: "Dating Spaces",
             description: "Hopefully your date never finds out about this.",
-            effectDescription: "+2% more RTS per Poast",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "+2% more RTS per Poast.",
             effect: function() {
                 rtsMultiplier += 0.02;
             },
@@ -362,160 +367,144 @@
         {
             name: "Esoteric Poasting",
             description: "What did you see?",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "ALGO PULL now has higher potency.",
             effect: function() {
-                
+                algoPullPotency += 1;
             },
             purchased: false
         },
         {
             name: "AI/ML Progress Updates",
             description: "DAY 57: Woke up, Drank Espresso, Built a new GPU Cluster, Got out of bed",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "+2% more Bookmarks per Poast.",
             effect: function() {
-                
+                bookmarksMultiplier += 0.02;
             },
             purchased: false
         },
         {
             name: "Bearblog Posts",
             description: "Everyone must know your hot take on React.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "RELEVANCE now lasts +2 seconds longer.",
             effect: function() {
-                
+                relevanceDuration += 2;
             },
             purchased: false
         },
         {
             name: "CS Textbook Studying",
             description: "You are the most interesting person in the Starbucks.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "CRACKED now has even higher potency.",
             effect: function() {
-                
+                crackedPotency += 2;
             },
             purchased: false
         },
         {
             name: "Anime PFP",
             description: "It's actually a high-TC signal, Dad.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "+5% more LIKES per Poast.",
             effect: function() {
-                
+                likesMultiplier += 0.05;
             },
             purchased: false
         },
         {
             name: "New LLM Hype Train",
             description: "You're out of a job, for real this time.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "ALGO PULL now has even higher potency.",
             effect: function() {
-                
+                algoPullPotency += 2;
             },
             purchased: false
         },
         {
             name: "Building something from Scratch in C",
             description: "If only you could build some funding...",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "+5% more RTS per Poast.",
             effect: function() {
-                
+                rtsMultiplier += 0.05;
             },
             purchased: false
         },
         {
             name: "Building a Joke Website",
             description: "Who would waste time on something like that?",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "AURA now has even higher potency.",
             effect: function() {
-                
+                auraPotency += 2;
             },
             purchased: false
         },
         {
             name: "Landed an SF job",
             description: "Your oomfies were rooting for you all along!",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "RELEVANCE now lasts +5 seconds longer.",
             effect: function() {
-                
+                relevanceDuration += 5;
             },
             purchased: false
         },
         {
             name: "Started a Startup",
             description: "One more B2B SaaS should do it.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "CRACKED now has greatly increased potency.",
             effect: function() {
-                
+                crackedPotency += 5;
             },
             purchased: false
         },
         {
             name: "Non-Anime PFP",
             description: "It's actually an anti-signal, Dad.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "+10% more LIKES per Poast.",
             effect: function() {
-                
+                likesMultiplier += 0.1;
             },
             purchased: false
         },
         {
             name: "Unexplainable Aura Spike",
             description: "Throughout Heaven and Earth...",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "ALGO PULL now has greatly increased potency.",
             effect: function() {
-                
+                algoPullPotency += 5;
             },
             purchased: false
         },
         {
             name: "Learning Zig",
             description: "... you alone are the Honored One.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "+10% more RTS per Poast.",
             effect: function() {
-                
+                rtsMultiplier += 0.1;
             },
             purchased: false
         },
         {
             name: "Accepted into Y-Combinator",
             description: "Now you can be a success, just like *checks notes* reddit",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "AURA now has greatly increased potency.",
             effect: function() {
-                
+                auraPotency += 5;
             },
             purchased: false
         },
         {
             name: "Lex Friedman Podcast Guest",
             description: "Peace and Love, man.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "+10% more BOOKMARKS per Poast.",
             effect: function() {
-                
+                bookmarksMultiplier += 0.1;
             },
             purchased: false
         },
         {
             name: "Sold your startup to FAANG",
             description: "Eh, being a founder was boring anyways.",
-            effectDescription: "",
-            cost: { likes: 1, rts: 1, bookmarks: 1 },
+            effectDescription: "RELEVANCE now lasts +10 seconds longer.",
             effect: function() {
-                
+                relevanceDuration += 10;
             },
             purchased: false
         },
@@ -523,7 +512,6 @@
             name: "Prestige",
             description: "You got too big, flew too close to the sun. There's only one thing left to do: make a new alt.",
             effectDescription: "Lose ALL progress, but Gain +1% more followers per Poast permanently.",
-            cost: { likes: 5, rts: 5, bookmarks: 5 },
             effect: function() {
                 prestige();
             },
@@ -550,12 +538,12 @@
         {
             name: "GPT3",
             description: "The Great Leap Forward.",
-            effectDescription: "Posts automatically every 7 seconds using 12% of your stats.",
+            effectDescription: "Posts automatically every 9.5 seconds using 12% of your stats.",
             baseCost: { likes: 300, rts: 100, bookmarks: 50 },
             cost: { likes: 300, rts: 100, bookmarks: 50 },
             costScaling: 1.6, // Scaling factor for cost increase
-            baseInterval: 7000, // Base interval of 7 seconds
-            interval: 7000, // Current interval (adjusted based on owned)
+            baseInterval: 9500, // Base interval of 9.5 seconds
+            interval: 9500, // Current interval (adjusted based on owned)
             potency: 0.12, // 12% of your stats
             owned: 0,
             timer: null
@@ -563,38 +551,38 @@
         {
             name: "CHATGPT",
             description: "The Starting Gun.",
-            effectDescription: "Posts automatically every 5 seconds using 20% of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
+            effectDescription: "Posts automatically every 9 seconds using 15% of your stats.",
+            baseCost: { likes: 500, rts: 300, bookmarks: 100 },
             cost: { likes: 500, rts: 300, bookmarks: 100 },
             costScaling: 1.6, // Scaling factor for cost increase
-            baseInterval: 5000, // Base interval of 5 seconds
-            interval: 5000, // Current interval (adjusted based on owned)
-            potency: 0.2, // 20% of your stats
+            baseInterval: 9000, // Base interval of 9 seconds
+            interval: 9000, // Current interval (adjusted based on owned)
+            potency: 0.15, // 15% of your stats
             owned: 0,
             timer: null
         },
         {
             name: "CLAUDE",
             description: "The Competitor.",
-            effectDescription: "Posts automatically every  seconds using % of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            effectDescription: "Posts automatically every 8.5 seconds using %17 of your stats.",
+            baseCost: { likes: 1000, rts: 500, bookmarks: 200 },
+            cost: { likes: 1000, rts: 500, bookmarks: 200 },
             costScaling: 1.6,
-            baseInterval: 5000,
-            interval: 5000,
-            potency: 0.2,
+            baseInterval: 8500,
+            interval: 8500,
+            potency: 0.17,
             owned: 0,
             timer: null
         },
         {
             name: "LLAMA",
             description: "The Local Legend.",
-            effectDescription: "Posts automatically every  seconds using % of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            effectDescription: "Posts automatically every 8 seconds using %20 of your stats.",
+            baseCost: { likes: 2000, rts: 1000, bookmarks: 500 },
+            cost: { likes: 2000, rts: 1000, bookmarks: 500 },
             costScaling: 1.6,
-            baseInterval: 5000,
-            interval: 5000,
+            baseInterval: 8000,
+            interval: 8000,
             potency: 0.2,
             owned: 0,
             timer: null
@@ -602,78 +590,78 @@
         {
             name: "GPT4",
             description: "The Refined Product.",
-            effectDescription: "Posts automatically every  seconds using % of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            effectDescription: "Posts automatically every 7.5 seconds using %22 of your stats.",
+            baseCost: { likes: 4000, rts: 2000, bookmarks: 1000 },
+            cost: { likes: 4000, rts: 2000, bookmarks: 1000 },
             costScaling: 1.6,
-            baseInterval: 5000,
-            interval: 5000,
-            potency: 0.2,
+            baseInterval: 7500,
+            interval: 7500,
+            potency: 0.22,
             owned: 0,
             timer: null
         },
         {
             name: "CLAUDE SONNET",
             description: "The Best in Class.",
-            effectDescription: "Posts automatically every  seconds using % of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            effectDescription: "Posts automatically every 7 seconds using %25 of your stats.",
+            baseCost: { likes: 10000, rts: 5000, bookmarks: 2000 },
+            cost: { likes: 10000, rts: 5000, bookmarks: 2000 },
             costScaling: 1.6,
-            baseInterval: 5000,
-            interval: 5000,
-            potency: 0.2,
+            baseInterval: 7000,
+            interval: 7000,
+            potency: 0.25,
             owned: 0,
             timer: null
         },
         {
             name: "LLAMA 2",
             description: "The Lovely Legend.",
-            effectDescription: "Posts automatically every  seconds using % of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            effectDescription: "Posts automatically every 6.5 seconds using %27 of your stats.",
+            baseCost: { likes: 20000, rts: 10000, bookmarks: 5000 },
+            cost: { likes: 20000, rts: 10000, bookmarks: 5000 },
             costScaling: 1.6,
-            baseInterval: 5000,
-            interval: 5000,
-            potency: 0.2,
+            baseInterval: 6500,
+            interval: 6500,
+            potency: 0.27,
             owned: 0,
             timer: null
         },
         {
             name: "GOLDEN GATE CLAUDE",
             description: "The Hyperfixator.",
-            effectDescription: "Posts automatically every  seconds using % of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            effectDescription: "Posts automatically every 6 seconds using %30 of your stats.",
+            baseCost: { likes: 40000, rts: 20000, bookmarks: 10000 },
+            cost: { likes: 40000, rts: 20000, bookmarks: 10000 },
             costScaling: 1.6,
-            baseInterval: 5000,
-            interval: 5000,
-            potency: 0.2,
+            baseInterval: 6000,
+            interval: 6000,
+            potency: 0.3,
             owned: 0,
             timer: null
         },
         {
             name: "LLAMA 3",
             description: "The Luxurious Legend.",
-            effectDescription: "Posts automatically every  seconds using % of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            effectDescription: "Posts automatically every 5.5 seconds using %33 of your stats.",
+            baseCost: { likes: 100000, rts: 40000, bookmarks: 20000 },
+            cost: { likes: 100000, rts: 40000, bookmarks: 20000 },
             costScaling: 1.6,
-            baseInterval: 5000,
-            interval: 5000,
-            potency: 0.2,
+            baseInterval: 5500,
+            interval: 5500,
+            potency: 0.33,
             owned: 0,
             timer: null
         },
         {
             name: "GPTo1",
             description: "The Strawberry.",
-            effectDescription: "Posts automatically every  seconds using % of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
+            effectDescription: "Posts automatically every 5 seconds using %35 of your stats.",
+            baseCost: { likes: 1000000, rts: 500000, bookmarks: 100000 },
+            cost: { likes: 1000000, rts: 500000, bookmarks: 100000 },
             costScaling: 1.6,
             baseInterval: 5000,
             interval: 5000,
-            potency: 0.2,
+            potency: 0.35,
             owned: 0,
             timer: null
         },
@@ -801,7 +789,6 @@
         updateDisplay();
     }
 
-    // Purchase Upgrade
     function purchaseUpgrade(index) {
         const upgrade = upgrades[index];
         if ((upgrade.repeatable || !upgrade.purchased) && canAfford(upgrade.cost)) {
@@ -818,6 +805,8 @@
             updateDisplay();
         }
     }
+
+
 
 
     // Purchase Autopoaster
@@ -934,7 +923,7 @@
     const nouns = ["lowbie", "VC", "hairdresser", "aura", "stack", "LLM", "engie", "model", "soft skill", "CS grad", "SF", "React", "Haskell", "Zig", "poaster", "swe", "grass", "nvim", "replyguy", "highbie", "oomfie", "mf", "chat"];
     const verbs = [ "fights", "ships", "flies", "eats", "sleeps", "follows", "rocks", "programs", "gaslights", "touches", "crashes", "poasts", "tweets", "yaps"];
 
-    function generateRandomPoast() {
+    function generateRandomPoast(poasterName = 'You') {
         const sentence = sentences[Math.floor(Math.random() * sentences.length)];
 
         // Function to get a random word from the given array based on type
@@ -942,7 +931,12 @@
             if (type === "adjective") {
                 return adjectives[Math.floor(Math.random() * adjectives.length)];
             } else if (type === "noun") {
-                return nouns[Math.floor(Math.random() * nouns.length)];
+                if(poasterName === 'GOLDEN GATE CLAUDE'){
+                    return "Golden Gate Bridge";
+                }
+                else{
+                    return nouns[Math.floor(Math.random() * nouns.length)];
+                }
             } else if (type === "verb") {
                 return verbs[Math.floor(Math.random() * verbs.length)];
             }
@@ -965,7 +959,7 @@
         poastDiv.className = 'poast';
 
         // Generate dynamic content
-        const poastContent = generateRandomPoast();
+        const poastContent = generateRandomPoast(poasterName);
 
         poastDiv.innerHTML = `
             <p>${poastContent}</p>
@@ -1024,6 +1018,7 @@
                 }
             }
         });
+        initUpgradeCosts();
 
         // Clear Poasts column
         const poastsDiv = document.getElementById('poasts');
@@ -1040,7 +1035,29 @@
         updateDisplay();
     }
 
+    function initUpgradeCosts() {
+        let previousCost = {
+            likes: upgradeBaseCost.likes,
+            rts: upgradeBaseCost.rts,
+            bookmarks: upgradeBaseCost.bookmarks
+        };
 
+        upgrades.forEach((upgrade, index) => {
+            if (index === 0) {
+                // First upgrade uses the base cost
+                upgrade.cost = { ...previousCost };
+            } else {
+                // Calculate new cost based on the previous upgrade's cost
+                let newCost = {
+                    likes: Math.floor(previousCost.likes * upgradeCostMultiplier),
+                    rts: Math.floor(previousCost.rts * upgradeCostMultiplier),
+                    bookmarks: Math.floor(previousCost.bookmarks * upgradeCostMultiplier)
+                };
+                upgrade.cost = newCost;
+                previousCost = newCost;
+            }
+        });
+    }
 
     // Initialize Upgrades
     function initUpgrades() {
@@ -1059,6 +1076,7 @@
             upgradesDiv.appendChild(upgradeDiv);
         });
     }
+
 
 
     // Initialize Autopoasters
@@ -1147,9 +1165,10 @@
             prestigeCount = savedData.prestigeCount || 0;
             prestigeBonus = savedData.prestigeBonus || 0;
 
-            savedData.upgrades.forEach((purchased, index) => {
-                upgrades[index].purchased = purchased;
-                if (purchased) {
+            savedData.upgrades.forEach((data, index) => {
+                upgrades[index].purchased = data.purchased;
+                upgrades[index].cost = data.cost || upgrades[index].cost;
+                if (upgrades[index].purchased && !upgrades[index].repeatable) {
                     upgrades[index].effect();
                     const button = document.getElementById('upgrade-button-' + index);
                     button.innerText = 'Purchased';
@@ -1197,6 +1216,7 @@
 
     // Initialize Game
     function initGame() {
+        initUpgradeCosts();
         initUpgrades();
         initAutopoasters();
         updateDisplay();

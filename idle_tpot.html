@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IDLE TPOT</title>
+    <title>IDLE TPOT v0.1</title>
     <link rel="icon" type="image/png" href="logo.png">
     <style>
         /* CSS Styles */
@@ -50,6 +50,25 @@
         h1, h2, h3, p, button {
             color: #ffffff;
         }
+
+        .header {
+            display: flex;
+            align-items: baseline; /* Aligns text baselines for better visual alignment */
+        }
+
+        .header h2, .header h4 {
+            margin: 0; /* Removes default margins */
+        }
+
+        .header h2 {
+            margin-right: 10px; /* Adjust spacing between the elements */
+        }
+
+        .header a {
+            color: #1DA1F2; /* Link color */
+            text-decoration: none; /* Removes underline from the link */
+        }
+
 
         button {
             background-color: #1DA1F2;
@@ -190,7 +209,10 @@
 <div class="container">
     <!-- Left Column -->
     <div class="column left-column">
-        <h2>IDLE TPOT by <a href="https://gibsonow.github.io/landing_page/" target="_blank">[og]</a></h2>
+        <div class="header">
+            <h2>[ IDLE TPOT ]</h2>
+            <h4>by <a href="https://gibsonow.github.io/landing_page/" target="_blank">[og]</a></h4>
+        </div>
         <button id="poastButton">Poast</button>
         <div class="menu">
             <h3>Stats</h3>
@@ -955,6 +977,10 @@
             </div>
         `;
         poastsDiv.prepend(poastDiv);
+        //limit to 100 poasts loaded onscreen at a time
+        while (poastsDiv.childElementCount > 100) {
+            poastsDiv.removeChild(poastsDiv.lastChild);
+        }
     }
 
     function prestige() {

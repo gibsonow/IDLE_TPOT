@@ -217,20 +217,20 @@
         <div class="menu">
             <h3>Stats</h3>
             <div class="tooltip">
-                <p>AURA: <span id="aura">1</span></p>
-                <span class="tooltiptext">AURA increases your presence and impact on Poasts.</span>
+                <p>🔥 AURA: <span id="aura">1</span></p>
+                <span class="tooltiptext">AURA increases your presence and impact on Poasts. Increases RTS and BOOKMARKS per Poast.</span>
             </div>
             <button id="buyAuraButton" onclick="purchaseStat('aura')">Buy Aura (Cost: <span id="auraCost">10</span> Likes)</button>
 
             <div class="tooltip">
-                <p>ALGO PULL: <span id="algoPull">1</span></p>
-                <span class="tooltiptext">ALGO PULL enhances your visibility in algorithms.</span>
+                <p>🌀 ALGO PULL: <span id="algoPull">1</span></p>
+                <span class="tooltiptext">ALGO PULL enhances your visibility in algorithms. Increases LIKES and BOOKMARKS per Poast.</span>
             </div>
             <button id="buyAlgoPullButton" onclick="purchaseStat('algoPull')">Buy Algo Pull (Cost: <span id="algoPullCost">10</span> RTs)</button>
 
             <div class="tooltip">
-                <p>CRACKED: <span id="cracked">1</span></p>
-                <span class="tooltiptext">CRACKED amplifies your efficiency and gains.</span>
+                <p>⚡ CRACKED: <span id="cracked">1</span></p>
+                <span class="tooltiptext">CRACKED amplifies your efficiency and gains. Increases LIKES and RTS per Poast.</span>
             </div>
             <button id="buyCrackedButton" onclick="purchaseStat('cracked')">Buy Cracked (Cost: <span id="crackedCost">10</span> Bookmarks)</button>
         </div>
@@ -243,7 +243,7 @@
         <div class="followers">
             <h3>Followers</h3>
             <div class="tooltip">
-                <p><span id="followers">0</span></p>
+                <p>👥 <span id="followers">0</span></p>
                 <span class="tooltiptext">FOLLOWERS dictates the initial reach of your Poasts. Increases with RELEVANCE.</span>
             </div>
         </div>
@@ -308,11 +308,11 @@
     const upgradeBaseCost = {
         likes: 50,
         rts: 20,
-        bookmarks: 10
+        bookmarks: 2
     };
 
     // Multiplication factor for subsequent upgrades
-    const upgradeCostMultiplier = 4.5;
+    const upgradeCostMultiplier = 2.5;
 
     // Prestige Variables
     let prestigeCount = 0; // Tracks how many Prestiges have been purchased
@@ -526,8 +526,8 @@
             name: "GPT2",
             description: "The Breakthrough.",
             effectDescription: "Posts automatically every 10 seconds using 10% of your stats.",
-            baseCost: { likes: 100, rts: 30, bookmarks: 10 },
-            cost: { likes: 100, rts: 30, bookmarks: 10 },
+            baseCost: { likes: 100, rts: 30, bookmarks: 3 },
+            cost: { likes: 100, rts: 30, bookmarks: 3 },
             costScaling: 1.5, // Scaling factor for cost increase
             baseInterval: 10000, // Base interval of 10 seconds
             interval: 10000, // Current interval (adjusted based on owned)
@@ -539,9 +539,9 @@
             name: "GPT3",
             description: "The Great Leap Forward.",
             effectDescription: "Posts automatically every 9.5 seconds using 12% of your stats.",
-            baseCost: { likes: 300, rts: 100, bookmarks: 50 },
-            cost: { likes: 300, rts: 100, bookmarks: 50 },
-            costScaling: 1.6, // Scaling factor for cost increase
+            baseCost: { likes: 300, rts: 100, bookmarks: 10 },
+            cost: { likes: 300, rts: 100, bookmarks: 10 },
+            costScaling: 1.5, // Scaling factor for cost increase
             baseInterval: 9500, // Base interval of 9.5 seconds
             interval: 9500, // Current interval (adjusted based on owned)
             potency: 0.12, // 12% of your stats
@@ -552,9 +552,9 @@
             name: "CHATGPT",
             description: "The Starting Gun.",
             effectDescription: "Posts automatically every 9 seconds using 15% of your stats.",
-            baseCost: { likes: 500, rts: 300, bookmarks: 100 },
-            cost: { likes: 500, rts: 300, bookmarks: 100 },
-            costScaling: 1.6, // Scaling factor for cost increase
+            baseCost: { likes: 500, rts: 300, bookmarks: 30 },
+            cost: { likes: 500, rts: 300, bookmarks: 30 },
+            costScaling: 1.5, // Scaling factor for cost increase
             baseInterval: 9000, // Base interval of 9 seconds
             interval: 9000, // Current interval (adjusted based on owned)
             potency: 0.15, // 15% of your stats
@@ -565,9 +565,9 @@
             name: "CLAUDE",
             description: "The Competitor.",
             effectDescription: "Posts automatically every 8.5 seconds using %17 of your stats.",
-            baseCost: { likes: 1000, rts: 500, bookmarks: 200 },
-            cost: { likes: 1000, rts: 500, bookmarks: 200 },
-            costScaling: 1.6,
+            baseCost: { likes: 1000, rts: 500, bookmarks: 50 },
+            cost: { likes: 1000, rts: 500, bookmarks: 50 },
+            costScaling: 1.5,
             baseInterval: 8500,
             interval: 8500,
             potency: 0.17,
@@ -578,9 +578,9 @@
             name: "LLAMA",
             description: "The Local Legend.",
             effectDescription: "Posts automatically every 8 seconds using %20 of your stats.",
-            baseCost: { likes: 2000, rts: 1000, bookmarks: 500 },
-            cost: { likes: 2000, rts: 1000, bookmarks: 500 },
-            costScaling: 1.6,
+            baseCost: { likes: 2000, rts: 1000, bookmarks: 100 },
+            cost: { likes: 2000, rts: 1000, bookmarks: 100 },
+            costScaling: 1.5,
             baseInterval: 8000,
             interval: 8000,
             potency: 0.2,
@@ -591,9 +591,9 @@
             name: "GPT4",
             description: "The Refined Product.",
             effectDescription: "Posts automatically every 7.5 seconds using %22 of your stats.",
-            baseCost: { likes: 4000, rts: 2000, bookmarks: 1000 },
-            cost: { likes: 4000, rts: 2000, bookmarks: 1000 },
-            costScaling: 1.6,
+            baseCost: { likes: 4000, rts: 2000, bookmarks: 200 },
+            cost: { likes: 4000, rts: 2000, bookmarks: 200 },
+            costScaling: 1.5,
             baseInterval: 7500,
             interval: 7500,
             potency: 0.22,
@@ -604,9 +604,9 @@
             name: "CLAUDE SONNET",
             description: "The Best in Class.",
             effectDescription: "Posts automatically every 7 seconds using %25 of your stats.",
-            baseCost: { likes: 10000, rts: 5000, bookmarks: 2000 },
-            cost: { likes: 10000, rts: 5000, bookmarks: 2000 },
-            costScaling: 1.6,
+            baseCost: { likes: 10000, rts: 5000, bookmarks: 500 },
+            cost: { likes: 10000, rts: 5000, bookmarks: 500 },
+            costScaling: 1.5,
             baseInterval: 7000,
             interval: 7000,
             potency: 0.25,
@@ -617,9 +617,9 @@
             name: "LLAMA 2",
             description: "The Lovely Legend.",
             effectDescription: "Posts automatically every 6.5 seconds using %27 of your stats.",
-            baseCost: { likes: 20000, rts: 10000, bookmarks: 5000 },
-            cost: { likes: 20000, rts: 10000, bookmarks: 5000 },
-            costScaling: 1.6,
+            baseCost: { likes: 20000, rts: 10000, bookmarks: 1000 },
+            cost: { likes: 20000, rts: 10000, bookmarks: 1000 },
+            costScaling: 1.5,
             baseInterval: 6500,
             interval: 6500,
             potency: 0.27,
@@ -630,9 +630,9 @@
             name: "GOLDEN GATE CLAUDE",
             description: "The Hyperfixator.",
             effectDescription: "Posts automatically every 6 seconds using %30 of your stats.",
-            baseCost: { likes: 40000, rts: 20000, bookmarks: 10000 },
-            cost: { likes: 40000, rts: 20000, bookmarks: 10000 },
-            costScaling: 1.6,
+            baseCost: { likes: 40000, rts: 20000, bookmarks: 2000 },
+            cost: { likes: 40000, rts: 20000, bookmarks: 2000 },
+            costScaling: 1.5,
             baseInterval: 6000,
             interval: 6000,
             potency: 0.3,
@@ -643,9 +643,9 @@
             name: "LLAMA 3",
             description: "The Luxurious Legend.",
             effectDescription: "Posts automatically every 5.5 seconds using %33 of your stats.",
-            baseCost: { likes: 100000, rts: 40000, bookmarks: 20000 },
-            cost: { likes: 100000, rts: 40000, bookmarks: 20000 },
-            costScaling: 1.6,
+            baseCost: { likes: 100000, rts: 40000, bookmarks: 4000 },
+            cost: { likes: 100000, rts: 40000, bookmarks: 4000 },
+            costScaling: 1.5,
             baseInterval: 5500,
             interval: 5500,
             potency: 0.33,
@@ -656,9 +656,9 @@
             name: "GPTo1",
             description: "The Strawberry.",
             effectDescription: "Posts automatically every 5 seconds using %35 of your stats.",
-            baseCost: { likes: 1000000, rts: 500000, bookmarks: 100000 },
-            cost: { likes: 1000000, rts: 500000, bookmarks: 100000 },
-            costScaling: 1.6,
+            baseCost: { likes: 1000000, rts: 500000, bookmarks: 50000 },
+            cost: { likes: 1000000, rts: 500000, bookmarks: 50000 },
+            costScaling: 1.5,
             baseInterval: 5000,
             interval: 5000,
             potency: 0.35,
@@ -873,9 +873,9 @@
         }
 
         // Calculate Rewards (likes, RTs, bookmarks)
-        let gainedLikes = (Math.random() * ((poastFollowers + algoPull + cracked) / 10 )) * potency * likesMultiplier;
-        let gainedRTs = (Math.random() * ((poastFollowers + aura + cracked) / 20 )) * potency * rtsMultiplier;
-        let gainedBookmarks = (Math.random() * ((poastFollowers + aura + algoPull) / 80 )) * potency * bookmarksMultiplier;
+        let gainedLikes = Math.floor((Math.random() * ((poastFollowers / 2 + algoPull + cracked) / 10 )) * potency * likesMultiplier);
+        let gainedRTs = Math.floor((Math.random() * ((poastFollowers / 2.5 + aura + cracked) / 20 )) * potency * rtsMultiplier);
+        let gainedBookmarks = Math.floor((Math.random() * ((poastFollowers / 6 + aura + algoPull) / 80 )) * potency * bookmarksMultiplier);
 
         likes += gainedLikes;
         rts += gainedRTs;
@@ -917,6 +917,7 @@
         "we are so {adjective}",
         "it has never been so {adjective}",
         "who here {verb} at 3 in the morning",
+        "you can call me {adjective}, just dont call me late for supper",
     ];
 
     const adjectives = ["goated", "based", "gonked", "hype", "delusional", "alright", "cracked", "trained", "over", "back", "kino", "ngmi"];
@@ -1211,7 +1212,7 @@
 
     // Poast Button Event
     document.getElementById('poastButton').addEventListener('click', () => {
-        poast();
+        poast(potency = 0.5);
     });
 
     // Initialize Game

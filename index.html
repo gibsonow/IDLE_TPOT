@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IDLE TPOT v1.0</title>
+    <title>IDLE TPOT v1.01</title>
     <link rel="icon" type="image/png" href="logo.png">
     <style>
         /* CSS Styles */
@@ -161,11 +161,9 @@
         /* Tooltip Styles */
         .tooltip {
             position: relative;
-            display: block;
             cursor: pointer;
         }
 
-        /* Tooltip text */
         .tooltip .tooltiptext {
             visibility: hidden;
             width: 200px;
@@ -176,9 +174,10 @@
             padding: 10px;
             position: absolute;
             z-index: 1;
-            bottom: 125%; /* Position above the tooltip element */
-            left: 50%;
-            margin-left: -100px; /* Center the tooltip */
+            top: 100%; /* Position below the tooltip element */
+            left: 150%;
+            transform: translateX(-50%);
+            margin-top: 5px;
             opacity: 0;
             transition: opacity 0.3s;
             font-size: 14px;
@@ -188,12 +187,12 @@
         .tooltip .tooltiptext::after {
             content: "";
             position: absolute;
-            top: 100%; /* At the bottom of the tooltip */
-            left: 50%;
-            margin-left: -5px;
+            bottom: 100%; /* At the top of the tooltip */
+            left: 25%;
+            transform: translateX(-50%);
             border-width: 5px;
             border-style: solid;
-            border-color: #1DA1F2 transparent transparent transparent;
+            border-color: transparent transparent #1DA1F2 transparent;
         }
 
         /* Show the tooltip text when hovering */
@@ -201,6 +200,12 @@
             visibility: visible;
             opacity: 1;
         }
+
+        /* Stat Item Styles */
+        .stat-item {
+            margin-bottom: 15px;
+        }
+
 
     </style>
 </head>
@@ -216,23 +221,33 @@
         <button id="poastButton">Poast</button>
         <div class="menu">
             <h3>Stats</h3>
-            <div class="tooltip">
-                <p>🔥 AURA: <span id="aura">1</span></p>
-                <span class="tooltiptext">AURA increases your presence and impact on Poasts. Increases RTS and BOOKMARKS per Poast.</span>
+    
+            <div class="stat-item">
+                <p>
+                    <span class="tooltip">🔥 AURA: <span id="aura">1</span>
+                        <span class="tooltiptext">AURA increases your presence and impact on Poasts. Increases RTS and BOOKMARKS per Poast.</span>
+                    </span>
+                </p>
+                <button id="buyAuraButton" onclick="purchaseStat('aura')">Buy Aura (Cost: <span id="auraCost">10</span> Likes)</button>
             </div>
-            <button id="buyAuraButton" onclick="purchaseStat('aura')">Buy Aura (Cost: <span id="auraCost">10</span> Likes)</button>
-
-            <div class="tooltip">
-                <p>🌀 ALGO PULL: <span id="algoPull">1</span></p>
-                <span class="tooltiptext">ALGO PULL enhances your visibility to the algorithm. Increases LIKES and BOOKMARKS per Poast.</span>
+    
+            <div class="stat-item">
+                <p>
+                    <span class="tooltip">🌀 ALGO PULL: <span id="algoPull">1</span>
+                        <span class="tooltiptext">ALGO PULL enhances your visibility in algorithms. Increases LIKES and BOOKMARKS per Poast.</span>
+                    </span>
+                </p>
+                <button id="buyAlgoPullButton" onclick="purchaseStat('algoPull')">Buy Algo Pull (Cost: <span id="algoPullCost">10</span> RTs)</button>
             </div>
-            <button id="buyAlgoPullButton" onclick="purchaseStat('algoPull')">Buy Algo Pull (Cost: <span id="algoPullCost">10</span> RTs)</button>
-
-            <div class="tooltip">
-                <p>⚡ CRACKED: <span id="cracked">1</span></p>
-                <span class="tooltiptext">CRACKED amplifies your proficiency and skill. Increases LIKES and RTS per Poast.</span>
+    
+            <div class="stat-item">
+                <p>
+                    <span class="tooltip">⚡ CRACKED: <span id="cracked">1</span>
+                        <span class="tooltiptext">CRACKED amplifies your efficiency and gains. Increases LIKES and RTS per Poast.</span>
+                    </span>
+                </p>
+                <button id="buyCrackedButton" onclick="purchaseStat('cracked')">Buy Cracked (Cost: <span id="crackedCost">10</span> Bookmarks)</button>
             </div>
-            <button id="buyCrackedButton" onclick="purchaseStat('cracked')">Buy Cracked (Cost: <span id="crackedCost">10</span> Bookmarks)</button>
         </div>
         <div class="currencies">
             <h3>Currencies</h3>
@@ -242,10 +257,11 @@
         </div>
         <div class="followers">
             <h3>Followers</h3>
-            <div class="tooltip">
-                <p>👥 <span id="followers">0</span></p>
-                <span class="tooltiptext">FOLLOWERS dictates the initial reach of your Poasts. Increases with RELEVANCE.</span>
-            </div>
+            <p>
+                <span class="tooltip">👥 <span id="followers">0</span>
+                    <span class="tooltiptext" style="left: 0; transform: none;">FOLLOWERS dictate the initial reach of your Poasts. Increases with RELEVANCE.</span>
+                </span>
+            </p>
         </div>
         <div class="save-buttons">
             <button onclick="manualSaveGame()">Save Game</button>
